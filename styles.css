@@ -17,3 +17,34 @@ hr{display:block;height:1px;border:0;border-top:1px solid #ccc;margin:1em 0;padd
 input,select{vertical-align:middle}
 
 /* actual styles */
+.container {
+    display: flex;
+    flex-direction: column;
+    background-color: powderblue;
+    height: 100vh;
+    align-items: center;
+    justify-content: space-between;
+}
+
+
+
+#game-board {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(100px, 1fr));
+    grid-template-rows: repeat(3, minmax(100px,1fr));
+    border: 1px;
+    border-color: black;
+    border-style: dashed;
+}
+
+#game-board > * {
+    text-align: center;
+    justify-items: center;
+}
+
+.game-square {
+    background-color: white;
+    padding: 5px;
+    border: 1px solid red;
+    text-align: center;
+}
