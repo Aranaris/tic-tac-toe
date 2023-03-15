@@ -23,7 +23,7 @@ input,select{vertical-align:middle}
     background-color: powderblue;
     height: 100vh;
     align-items: center;
-    justify-content: space-between;
+    justify-content: space-around;
 }
 
 
@@ -47,4 +47,9 @@ input,select{vertical-align:middle}
     padding: 5px;
     border: 1px solid red;
     text-align: center;
+}
+
+.winning-square {
+    background-color: lightgreen;
+    font-weight: bold;
 }

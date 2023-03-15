@@ -22,40 +22,40 @@ const gameBoard = (() => {
         let boardGrid = document.getElementById("game-board");
         boardGrid.replaceChildren();
         for (const i of board) {
-            let newSquare = document.createElement('div');
+            let newSquare = document.createElement('button');
             newSquare.className = 'game-square';
             newSquare.id = `${i}`;
-            newSquare.textContent = i;
+            newSquare.dataset.row = i[0];
+            newSquare.dataset.column = i[1];
+            newSquare.textContent = `${newSquare.dataset.row}  + ${newSquare.dataset.column}`;
             newSquare.addEventListener('click',() => {
                 makePlay(i);
             }, false);
-            boardGrid.appendChild(newSquare);
-            
+            boardGrid.appendChild(newSquare);   
         }
+        currentPlayer = playerOne;
     };
 
     let currentPlayer = playerOne;
-    let getCurrentPlayer = () => currentPlayer.getName;
-    let getCurrentMarker = () => currentPlayer.marker;
+    const getCurrentPlayer = () => currentPlayer.getName;
+    const getCurrentMarker = () => currentPlayer.marker;
 
     const setCurrentPlayer = () => {
         if (currentPlayer === playerOne) {
             currentPlayer = playerTwo;
-            console.log(`${currentPlayer.getName}`);
         } else if (currentPlayer === playerTwo) {
             currentPlayer = playerOne;
-            console.log(`${currentPlayer.getName}`);
         }
-        getCurrentPlayer = currentPlayer.getName;
     };
 
     
 
     const makePlay = (square) => {
         let getSquare = document.getElementById(square);
-        getSquare.textContent = currentPlayer.marker;
-        setCurrentPlayer();
-        gameController.update();
+        if (getSquare.textContent !== 'X' && getSquare.textContent !== 'O') {
+            getSquare.textContent = currentPlayer.marker;
+            gameController.update(square, currentPlayer);
+        }
     };
 
     return {
@@ -69,21 +69,74 @@ const gameBoard = (() => {
 })();
 
 const gameController = ( () => {    
-    const dummyVal = true;
-    const _checkWinner = () => {
-        if (dummyVal) {
-            console.log('winner');
+    const _checkRow = (square, player) => {
+        const currentBoard = gameBoard.board;
+        let winningSquares = [];
+        for (const i of currentBoard) {
+            if (i[0] === square[0]) {
+                const checkRowSquare = document.getElementById(i);
+                if (checkRowSquare.textContent !== player.marker) {
+                    break;
+                } else {
+                    winningSquares.push(i);
+                }
+            }
+        }
+        if (winningSquares.length === 3) {
+            for (const j of winningSquares) {
+                const wSquare = document.getElementById(j);
+                wSquare.classList.add('winning-square');
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    const _checkColumn = (square, player) => {
+        const currentBoard = gameBoard.board;
+        let winningSquares = [];
+        for (const i of currentBoard) {
+            if (i[1] === square[1]) {
+                const checkRowSquare = document.getElementById(i);
+                if (checkRowSquare.textContent !== player.marker) {
+                    break;
+                } else {
+                    winningSquares.push(i);
+                }
+            }
+        }
+        if (winningSquares.length === 3) {
+            for (const j of winningSquares) {
+                const wSquare = document.getElementById(j);
+                wSquare.classList.add('winning-square');
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    const _checkWinner = (square, player) => {
+        
+        if (_checkRow(square, player)) {
+            console.log(`${square} + ${player.getName}`);
+        } else if (_checkColumn(square, player)) {
+            console.log(`${square} + ${player.getName}`);
         }
     };
 
     const _changeDisplay = () => {
         let scoreBoard = document.querySelector('.game-info');
         scoreBoard.replaceChildren();
-        scoreBoard.textContent = `${gameBoard.getCurrentPlayer()}: ${gameBoard.getCurrentMarker()}`;
+        scoreBoard.textContent = `Current Move: ${gameBoard.getCurrentPlayer()} (${gameBoard.getCurrentMarker()})`;
     };
 
-    const update = () => {
-        _checkWinner();
+    const update = (square, player) => {
+        if (square) {
+            _checkWinner(square, player);
+            gameBoard.setCurrentPlayer();
+        }
         _changeDisplay();
     }
 
