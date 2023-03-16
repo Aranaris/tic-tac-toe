@@ -53,3 +53,8 @@ input,select{vertical-align:middle}
     background-color: lightgreen;
     font-weight: bold;
 }
+
+button:disabled {
+    border: gray;
+    border-style: solid;
+}
